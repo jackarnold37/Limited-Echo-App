@@ -78,6 +78,10 @@ PROTOCOL_DATABASE = [
     {"window": "PARASTERNAL LONG AXIS (PLAX)", "step": "Ascending Aorta Color", "condition": "Aorta"},
     {"window": "PARASTERNAL LONG AXIS (PLAX)", "step": "Zoom LVOT (2D)", "condition": "HOCM/Camzyos"},
     {"window": "PARASTERNAL LONG AXIS (PLAX)", "step": "Color LVOT", "condition": "HOCM/Camzyos"},
+    {"window": "PARASTERNAL LONG AXIS (PLAX)", "step": "Tricuspid Valve Tilt 2D", "condition": "RV Function & Pulmonary Hypertension"},
+    {"window": "PARASTERNAL LONG AXIS (PLAX)", "step": "Tricuspid Valve Color", "condition": "RV Function & Pulmonary Hypertension"},
+    {"window": "PARASTERNAL LONG AXIS (PLAX)", "step": "Tricuspid Valve CW Doppler", "condition": "RV Function & Pulmonary Hypertension"},
+    {"window": "PARASTERNAL LONG AXIS (PLAX)", "step": "Pulmonary Valve Tilt", "condition": "RV Function & Pulmonary Hypertension"},
 
     # PSAX
     {"window": "PARASTERNAL SHORT AXIS (PSAX)", "step": "Aortic level 2D (AV, TV)", "condition": "Default required views"},
@@ -267,9 +271,4 @@ else:
     
     # Total Estimated Pictures Metric Box
     st.markdown(
-        f'<div class="metric-box" style="color: #002D62;">Total Estimated Pictures: {total_pictures} (± 5 pictures)</div>',
-        unsafe_allow_html=True
-    )
-
-st.markdown("---")
-st.markdown("*Tip: Press `Ctrl + P` or `Cmd + P` in your browser to cleanly print or save this protocol checklist as a PDF.*")
+        f'<div class="metric-box" style="co
