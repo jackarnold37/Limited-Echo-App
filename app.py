@@ -216,7 +216,6 @@ st.markdown("Select target assessments below to dynamically generate the require
 
 # Checkboxes placed front and center
 with st.expander("📌 Tap here to select Target Assessments", expanded=True):
-    # Default required views is permanently included and cannot be unchecked
     selected_conditions = ["Default required views"]
     
     col1, col2 = st.columns(2)
@@ -271,4 +270,4 @@ else:
     
     # Total Estimated Pictures Metric Box
     st.markdown(
-        f'<div class="metric-box" style="co
+        f'<div class="metric-box" style="color: #002D62;">Total Estimated Pictures: {total_pictures} (± 5 pictures)</div
