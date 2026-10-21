@@ -3,7 +3,6 @@ import streamlit as st
 # Page Configuration
 st.set_page_config(
     page_title="Cleveland Clinic - Limited Echo Protocol Generator",
-    page_icon="🫀",
     layout="wide"
 )
 
@@ -207,59 +206,39 @@ PROTOCOL_DATABASE = [
     {"window": "RIGHT STERNAL BORDER", "step": "Right Sternal Border CW", "condition": "Aortic Valve / TAVR"}
 ]
 
-# App Layout
-st.title("🫀 Cleveland Clinic - Limited Echo Protocol Generator")
+# App Title (Clean, no emoji)
+st.title("Cleveland Clinic - Limited Echo Protocol Generator")
 st.markdown("Select target assessments below to dynamically generate the required protocol checklist.")
 
-st.sidebar.header("Target Assessments")
-
-# Checkbox selections
-selected_conditions = []
-
-# Default required views checked by default
-default_views = st.sidebar.checkbox("Default required views", value=True)
-if default_views:
-    selected_conditions.append("Default required views")
-
-lv_func = st.sidebar.checkbox("LV Function & Wall Motion", value=False)
-if lv_func:
-    selected_conditions.append("LV Function & Wall Motion")
-
-pericardial = st.sidebar.checkbox("Pericardial Effusion / Tamponade", value=False)
-if pericardial:
-    selected_conditions.append("Pericardial Effusion / Tamponade")
-
-rv_func = st.sidebar.checkbox("RV Function & Pulmonary Hypertension", value=False)
-if rv_func:
-    selected_conditions.append("RV Function & Pulmonary Hypertension")
-
-aortic_val = st.sidebar.checkbox("Aortic Valve / TAVR", value=False)
-if aortic_val:
-    selected_conditions.append("Aortic Valve / TAVR")
-
-mitral_val = st.sidebar.checkbox("Mitral Valve", value=False)
-if mitral_val:
-    selected_conditions.append("Mitral Valve")
-
-tricuspid_val = st.sidebar.checkbox("Tricuspid Valve", value=False)
-if tricuspid_val:
-    selected_conditions.append("Tricuspid Valve")
-
-pulmonic_val = st.sidebar.checkbox("Pulmonic Valve", value=False)
-if pulmonic_val:
-    selected_conditions.append("Pulmonic Valve")
-
-endocarditis = st.sidebar.checkbox("Endocarditis / Rule Out Thrombus", value=False)
-if endocarditis:
-    selected_conditions.append("Endocarditis / Rule Out Thrombus")
-
-aorta = st.sidebar.checkbox("Aorta", value=False)
-if aorta:
-    selected_conditions.append("Aorta")
-
-hocm = st.sidebar.checkbox("HOCM/Camzyos", value=False)
-if hocm:
-    selected_conditions.append("HOCM/Camzyos")
+# Checkboxes placed front and center in an expandable box for mobile convenience
+with st.expander("📌 Tap here to select Target Assessments", expanded=True):
+    selected_conditions = []
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.checkbox("Default required views", value=True):
+            selected_conditions.append("Default required views")
+        if st.checkbox("LV Function & Wall Motion", value=False):
+            selected_conditions.append("LV Function & Wall Motion")
+        if st.checkbox("Pericardial Effusion / Tamponade", value=False):
+            selected_conditions.append("Pericardial Effusion / Tamponade")
+        if st.checkbox("RV Function & Pulmonary Hypertension", value=False):
+            selected_conditions.append("RV Function & Pulmonary Hypertension")
+        if st.checkbox("Aortic Valve / TAVR", value=False):
+            selected_conditions.append("Aortic Valve / TAVR")
+        if st.checkbox("Mitral Valve", value=False):
+            selected_conditions.append("Mitral Valve")
+    with col2:
+        if st.checkbox("Tricuspid Valve", value=False):
+            selected_conditions.append("Tricuspid Valve")
+        if st.checkbox("Pulmonic Valve", value=False):
+            selected_conditions.append("Pulmonic Valve")
+        if st.checkbox("Endocarditis / Rule Out Thrombus", value=False):
+            selected_conditions.append("Endocarditis / Rule Out Thrombus")
+        if st.checkbox("Aorta", value=False):
+            selected_conditions.append("Aorta")
+        if st.checkbox("HOCM/Camzyos", value=False):
+            selected_conditions.append("HOCM/Camzyos")
 
 # Filter Database based on selections
 active_steps = [item for item in PROTOCOL_DATABASE if item["condition"] in selected_conditions]
@@ -279,7 +258,7 @@ st.subheader("Required Views Protocol")
 total_pictures = len(active_steps)
 
 if not grouped_protocol:
-    st.info("Please select at least one assessment from the sidebar.")
+    st.info("Please select at least one assessment.")
 else:
     for window, steps in grouped_protocol.items():
         st.markdown(f'<div class="window-header">{window}</div>', unsafe_allow_html=True)
@@ -292,6 +271,5 @@ else:
         unsafe_allow_html=True
     )
 
-# Print / Export button helper notice
 st.markdown("---")
-st.markdown("*Tip: You can press `Ctrl + P` or `Cmd + P` in your browser at any time to cleanly print or save this protocol checklist as a PDF.*")
+st.markdown("*Tip: Press `Ctrl + P` or `Cmd + P` in your browser to cleanly print or save this protocol checklist as a PDF.*")
