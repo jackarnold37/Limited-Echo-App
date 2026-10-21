@@ -206,18 +206,18 @@ PROTOCOL_DATABASE = [
     {"window": "RIGHT STERNAL BORDER", "step": "Right Sternal Border CW", "condition": "Aortic Valve / TAVR"}
 ]
 
-# App Title (Clean, no emoji)
+# App Title
 st.title("Cleveland Clinic - Limited Echo Protocol Generator")
 st.markdown("Select target assessments below to dynamically generate the required protocol checklist.")
 
-# Checkboxes placed front and center in an expandable box for mobile convenience
+# Checkboxes placed front and center
 with st.expander("📌 Tap here to select Target Assessments", expanded=True):
-    selected_conditions = []
+    # Default required views is permanently included and cannot be unchecked
+    selected_conditions = ["Default required views"]
     
     col1, col2 = st.columns(2)
     with col1:
-        if st.checkbox("Default required views", value=True):
-            selected_conditions.append("Default required views")
+        st.checkbox("Default required views", value=True, disabled=True)
         if st.checkbox("LV Function & Wall Motion", value=False):
             selected_conditions.append("LV Function & Wall Motion")
         if st.checkbox("Pericardial Effusion / Tamponade", value=False):
