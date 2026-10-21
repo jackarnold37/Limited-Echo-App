@@ -270,4 +270,9 @@ else:
     
     # Total Estimated Pictures Metric Box
     st.markdown(
-        f'<div class="metric-box" style="color: #002D62;">Total Estimated Pictures: {total_pictures} (± 5 pictures)</div
+        f'<div class="metric-box" style="color: #002D62;">Total Estimated Pictures: {total_pictures} (± 5 pictures)</div>',
+        unsafe_allow_html=True
+    )
+
+st.markdown("---")
+st.markdown("*Tip: Press `Ctrl + P` or `Cmd + P` in your browser to cleanly print or save this protocol checklist as a PDF.*")
