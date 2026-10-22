@@ -4,7 +4,7 @@ from PIL import Image  # Added to load the icon image
 # Page Configuration - Updated to use the custom icon
 try:
     # Try to load the custom image you uploaded
-    icon = Image.open("Limited_icon.jpg")
+    icon = Image.open("limited_icon.jpg")
     st.set_page_config(
         page_title="Cleveland Clinic - Limited Echo Protocol Generator",
         page_icon=icon,  # Set the icon to your custom image
