@@ -1,10 +1,22 @@
 import streamlit as st
+from PIL import Image  # Added to load the icon image
 
-# Page Configuration
-st.set_page_config(
-    page_title="Cleveland Clinic - Limited Echo Protocol Generator",
-    layout="wide"
-)
+# Page Configuration - Updated to use the custom icon
+try:
+    # Try to load the custom image you uploaded
+    icon = Image.open("Limited_icon.jpg")
+    st.set_page_config(
+        page_title="Cleveland Clinic - Limited Echo Protocol Generator",
+        page_icon=icon,  # Set the icon to your custom image
+        layout="wide"
+    )
+except FileNotFoundError:
+    # Fallback in case the image hasn't finished deploying or isn't found
+    st.set_page_config(
+        page_title="Cleveland Clinic - Limited Echo Protocol Generator",
+        page_icon="🩺",
+        layout="wide"
+    )
 
 # Custom Styling (Cleveland Clinic Navy Blue & Clean Healthcare Aesthetic)
 st.markdown("""
@@ -216,6 +228,7 @@ st.markdown("Select target assessments below to dynamically generate the require
 
 # Checkboxes placed front and center
 with st.expander("📌 Tap here to select Target Assessments", expanded=True):
+    # Default required views is permanently included and cannot be unchecked
     selected_conditions = ["Default required views"]
     
     col1, col2 = st.columns(2)
