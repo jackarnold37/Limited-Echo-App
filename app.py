@@ -260,28 +260,47 @@ with st.expander("📌 Tap here to select Target Assessments", expanded=True):
 # Filter Database based on selected conditions
 active_steps = [item for item in PROTOCOL_DATABASE if item["condition"] in selected_conditions]
 
-# If Inpatient mode is toggled ON, filter out specific views across the active list
+# If Inpatient mode is toggled ON, filter down precisely to your requested list
 if inpatient_mode:
-    # Exact steps allowed when inpatient mode is active:
-    # - PLAX: Zoomed-out wide-field PLAX 2D, Standard PLAX 2D with increased depth, M-mode LV (mid-ventricle)
-    # - PSAX: Aortic level 2D (AV, TV), PSAX Mid-LV Papillary 2D, PSAX Apex
-    # - Apical 4: LV/RV 2D, Zoom LV / LV Focused View
-    # - Apical 2: 2D, Zoom LV / LV Focused View
-    # - Apical 3: 2D, Zoom LV / LV Focused View
-    # - Subcostal: Subcostal 4-Chamber 2D, Subcostal Hepatic Vein Pulsed-Wave Doppler Flow, Subcostal IVC with sniff test
     allowed_inpatient_steps = [
+        # PLAX
         "Zoomed-out wide-field PLAX 2D",
         "Standard PLAX 2D with increased depth",
+        "Long clip LV 2D",
         "M-mode LV (mid-ventricle)",
+        # PSAX
         "Aortic level 2D (AV, TV)",
-        "PSAX Mid-LV Papillary 2D",
+        "Mitral level 2D",
+        "Long clip PSAX Mid-LV Papillary 2D",
+        "Long clip PSAX M-mode Papillary level",
         "PSAX Apex",
+        # Apical 4
         "LV/RV 2D",
         "Zoom LV / LV Focused View (for strain / GLS)",
+        "Long clip Interventricular Septum 2D",
+        "CW MV",
+        "PW Mitral inflow with respiratory variation",
+        "PW Pulmonary Vein flow with respiratory variation (Long clip)",
+        "Tissue Doppler (Lateral Annulus)",
+        "Tissue Doppler (Septal Annulus)",
+        # RV Focused Apical 4
+        "2D RV Focused View",
+        # Apical 2
         "2D",
+        "Zoom LV / LV Focused View (for strain / GLS)",
+        # Apical 3
+        "2D",
+        "Zoom LV / LV Focused View (for strain / GLS)",
+        # Subcostal
         "Subcostal 4-Chamber 2D",
+        "Subcostal M-mode Right Atrium (RA collapse)",
+        "Subcostal M-mode Right Ventricle (RV collapse)",
         "Subcostal Hepatic Vein Pulsed-Wave Doppler Flow",
-        "Subcostal IVC with sniff test"
+        "Subcostal IVC with sniff test",
+        # SSN
+        "Aortic Arch 2D",
+        "SVC Color Doppler",
+        "SVC PW Doppler"
     ]
     active_steps = [item for item in active_steps if item["step"] in allowed_inpatient_steps]
 
@@ -291,7 +310,6 @@ for item in active_steps:
     win = item["window"]
     if win not in grouped_protocol:
         grouped_protocol[win] = []
-    # Avoid duplicate steps if multiple conditions match
     if item["step"] not in grouped_protocol[win]:
         grouped_protocol[win].append(item["step"])
 
@@ -317,3 +335,4 @@ else:
 
 st.markdown("---")
 st.markdown("*Tip: Press `Ctrl + P` or `Cmd + P` in your browser to cleanly print or save this protocol checklist as a PDF.*")
+     
