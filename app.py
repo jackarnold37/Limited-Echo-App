@@ -264,4 +264,56 @@ active_steps = [item for item in PROTOCOL_DATABASE if item["condition"] in selec
 if inpatient_mode:
     # Exact steps allowed when inpatient mode is active:
     # - PLAX: Zoomed-out wide-field PLAX 2D, Standard PLAX 2D with increased depth, M-mode LV (mid-ventricle)
-    # - PSAX: Aortic level 2D (AV, TV), PSAX Mid-LV Papillary 2D, PSAX Ap
+    # - PSAX: Aortic level 2D (AV, TV), PSAX Mid-LV Papillary 2D, PSAX Apex
+    # - Apical 4: LV/RV 2D, Zoom LV / LV Focused View
+    # - Apical 2: 2D, Zoom LV / LV Focused View
+    # - Apical 3: 2D, Zoom LV / LV Focused View
+    # - Subcostal: Subcostal 4-Chamber 2D, Subcostal Hepatic Vein Pulsed-Wave Doppler Flow, Subcostal IVC with sniff test
+    allowed_inpatient_steps = [
+        "Zoomed-out wide-field PLAX 2D",
+        "Standard PLAX 2D with increased depth",
+        "M-mode LV (mid-ventricle)",
+        "Aortic level 2D (AV, TV)",
+        "PSAX Mid-LV Papillary 2D",
+        "PSAX Apex",
+        "LV/RV 2D",
+        "Zoom LV / LV Focused View (for strain / GLS)",
+        "2D",
+        "Subcostal 4-Chamber 2D",
+        "Subcostal Hepatic Vein Pulsed-Wave Doppler Flow",
+        "Subcostal IVC with sniff test"
+    ]
+    active_steps = [item for item in active_steps if item["step"] in allowed_inpatient_steps]
+
+# Group by Window Header
+grouped_protocol = {}
+for item in active_steps:
+    win = item["window"]
+    if win not in grouped_protocol:
+        grouped_protocol[win] = []
+    # Avoid duplicate steps if multiple conditions match
+    if item["step"] not in grouped_protocol[win]:
+        grouped_protocol[win].append(item["step"])
+
+# Display Protocol Output
+st.markdown("---
+st.subheader("Required Views Protocol" + (" (Inpatient Mode)" if inpatient_mode else ""))
+
+total_pictures = sum(len(steps) for steps in grouped_protocol.values())
+
+if not grouped_protocol:
+    st.info("Please select at least one assessment.")
+else:
+    for window, steps in grouped_protocol.items():
+        st.markdown(f'<div class="window-header">{window}</div>', unsafe_allow_html=True)
+        for step in steps:
+            st.markdown(f'<div class="step-item">• {step}</div>', unsafe_allow_html=True)
+    
+    # Total Estimated Pictures Metric Box
+    st.markdown(
+        f'<div class="metric-box" style="color: #002D62;">Total Estimated Pictures: {total_pictures} (± 5 pictures)</div>',
+        unsafe_allow_html=True
+    )
+
+st.markdown("---")
+st.markdown("*Tip: Press `Ctrl + P` or `Cmd + P` in your browser to cleanly print or save this protocol checklist as a PDF.*")
