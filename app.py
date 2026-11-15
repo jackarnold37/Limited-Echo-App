@@ -224,89 +224,44 @@ PROTOCOL_DATABASE = [
 st.title("Cleveland Clinic - Limited Echo Protocol Generator")
 st.markdown("Select target assessments below to dynamically generate the required protocol checklist.")
 
-# Checkboxes placed front and center
+# 1. Dedicated "In patient" Box right above the checklist
+with st.expander("🏥 In patient", expanded=True):
+    inpatient_mode = st.toggle("Enable Inpatient Super-Limited Mode", value=False)
+
+# 2. Target Assessments Expander & Checkboxes
 with st.expander("📌 Tap here to select Target Assessments", expanded=True):
-    # Inpatient Toggle Switch right above the checkboxes
-    inpatient_mode = st.toggle("🏥 Inpatient Protocol (Super-Limited)", value=False)
-    
     selected_conditions = ["Default required views"]
     
-    if not inpatient_mode:
-        col1, col2 = st.columns(2)
-        with col1:
-            st.checkbox("Default required views", value=True, disabled=True)
-            if st.checkbox("LV Function & Wall Motion", value=False):
-                selected_conditions.append("LV Function & Wall Motion")
-            if st.checkbox("Pericardial Effusion / Tamponade", value=False):
-                selected_conditions.append("Pericardial Effusion / Tamponade")
-            if st.checkbox("RV Function & Pulmonary Hypertension", value=False):
-                selected_conditions.append("RV Function & Pulmonary Hypertension")
-            if st.checkbox("Aortic Valve / TAVR", value=False):
-                selected_conditions.append("Aortic Valve / TAVR")
-            if st.checkbox("Mitral Valve", value=False):
-                selected_conditions.append("Mitral Valve")
-        with col2:
-            if st.checkbox("Tricuspid Valve", value=False):
-                selected_conditions.append("Tricuspid Valve")
-            if st.checkbox("Pulmonic Valve", value=False):
-                selected_conditions.append("Pulmonic Valve")
-            if st.checkbox("Endocarditis / Rule Out Thrombus", value=False):
-                selected_conditions.append("Endocarditis / Rule Out Thrombus")
-            if st.checkbox("Aorta", value=False):
-                selected_conditions.append("Aorta")
-            if st.checkbox("HOCM/Camzyos", value=False):
-                selected_conditions.append("HOCM/Camzyos")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.checkbox("Default required views", value=True, disabled=True)
+        if st.checkbox("LV Function & Wall Motion", value=False):
+            selected_conditions.append("LV Function & Wall Motion")
+        if st.checkbox("Pericardial Effusion / Tamponade", value=False):
+            selected_conditions.append("Pericardial Effusion / Tamponade")
+        if st.checkbox("RV Function & Pulmonary Hypertension", value=False):
+            selected_conditions.append("RV Function & Pulmonary Hypertension")
+        if st.checkbox("Aortic Valve / TAVR", value=False):
+            selected_conditions.append("Aortic Valve / TAVR")
+        if st.checkbox("Mitral Valve", value=False):
+            selected_conditions.append("Mitral Valve")
+    with col2:
+        if st.checkbox("Tricuspid Valve", value=False):
+            selected_conditions.append("Tricuspid Valve")
+        if st.checkbox("Pulmonic Valve", value=False):
+            selected_conditions.append("Pulmonic Valve")
+        if st.checkbox("Endocarditis / Rule Out Thrombus", value=False):
+            selected_conditions.append("Endocarditis / Rule Out Thrombus")
+        if st.checkbox("Aorta", value=False):
+            selected_conditions.append("Aorta")
+        if st.checkbox("HOCM/Camzyos", value=False):
+            selected_conditions.append("HOCM/Camzyos")
 
-# Filter Database based on selections or Inpatient Mode Override
+# Filter Database based on selected conditions
+active_steps = [item for item in PROTOCOL_DATABASE if item["condition"] in selected_conditions]
+
+# If Inpatient mode is toggled ON, filter out specific views across the active list
 if inpatient_mode:
-    # Explicit Inpatient Super-Limited List for LV Function
-    active_steps = [
-        {"window": "PARASTERNAL LONG AXIS (PLAX)", "step": "Zoomed-out wide-field PLAX 2D"},
-        {"window": "PARASTERNAL LONG AXIS (PLAX)", "step": "Standard PLAX 2D with increased depth"},
-        {"window": "PARASTERNAL LONG AXIS (PLAX)", "step": "M-mode LV (mid-ventricle)"},
-        {"window": "PARASTERNAL SHORT AXIS (PSAX)", "step": "Aortic level 2D (AV, TV)"},
-        {"window": "PARASTERNAL SHORT AXIS (PSAX)", "step": "PSAX Mid-LV Papillary 2D"},
-        {"window": "PARASTERNAL SHORT AXIS (PSAX)", "step": "PSAX Apex"},
-        {"window": "APICAL 4-CHAMBER", "step": "LV/RV 2D"},
-        {"window": "APICAL 4-CHAMBER", "step": "Zoom LV / LV Focused View (for strain / GLS)"},
-        {"window": "APICAL 2-CHAMBER", "step": "2D"},
-        {"window": "APICAL 2-CHAMBER", "step": "Zoom LV / LV Focused View (for strain / GLS)"},
-        {"window": "APICAL 3-CHAMBER", "step": "2D"},
-        {"window": "APICAL 3-CHAMBER", "step": "Zoom LV / LV Focused View (for strain / GLS)"},
-        {"window": "SUBCOSTAL", "step": "Subcostal 4-Chamber 2D"},
-        {"window": "SUBCOSTAL", "step": "Subcostal Hepatic Vein Pulsed-Wave Doppler Flow"},
-        {"window": "SUBCOSTAL", "step": "Subcostal IVC with sniff test"}
-    ]
-else:
-    active_steps = [item for item in PROTOCOL_DATABASE if item["condition"] in selected_conditions]
-
-# Group by Window Header
-grouped_protocol = {}
-for item in active_steps:
-    win = item["window"]
-    if win not in grouped_protocol:
-        grouped_protocol[win] = []
-    grouped_protocol[win].append(item["step"])
-
-# Display Protocol Output
-st.markdown("---")
-st.subheader("Required Views Protocol" + (" (Inpatient Mode)" if inpatient_mode else ""))
-
-total_pictures = len(active_steps)
-
-if not grouped_protocol:
-    st.info("Please select at least one assessment.")
-else:
-    for window, steps in grouped_protocol.items():
-        st.markdown(f'<div class="window-header">{window}</div>', unsafe_allow_html=True)
-        for step in steps:
-            st.markdown(f'<div class="step-item">• {step}</div>', unsafe_allow_html=True)
-    
-    # Total Estimated Pictures Metric Box
-    st.markdown(
-        f'<div class="metric-box" style="color: #002D62;">Total Estimated Pictures: {total_pictures} (± 5 pictures)</div>',
-        unsafe_allow_html=True
-    )
-
-st.markdown("---")
-st.markdown("*Tip: Press `Ctrl + P` or `Cmd + P` in your browser to cleanly print or save this protocol checklist as a PDF.*")
+    # Exact steps allowed when inpatient mode is active:
+    # - PLAX: Zoomed-out wide-field PLAX 2D, Standard PLAX 2D with increased depth, M-mode LV (mid-ventricle)
+    # - PSAX: Aortic level 2D (AV, TV), PSAX Mid-LV Papillary 2D, PSAX Ap
