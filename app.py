@@ -296,7 +296,7 @@ for item in active_steps:
         grouped_protocol[win].append(item["step"])
 
 # Display Protocol Output
-st.markdown("---
+st.markdown("---")
 st.subheader("Required Views Protocol" + (" (Inpatient Mode)" if inpatient_mode else ""))
 
 total_pictures = sum(len(steps) for steps in grouped_protocol.values())
